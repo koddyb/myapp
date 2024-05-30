@@ -8,6 +8,11 @@ pipeline {
     }
 
     stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
         stage('Cloning the Repository') {
             steps {
                 git branch: "${params.GIT_BRANCH}", 
