@@ -38,7 +38,17 @@ pipeline {
         stage('Building Application') {
             steps {
                 script {
-                    sh "docker build -t ${params.DOCKERHUB_USERNAME}/${params.APP_NAME}:${params.APP_VERSION}."
+                    sh "docker build -t ${params.DOCKERHUB_USERNAME}/${params.APP_NAME}:${params.APP_VERSION} ."
+                }
+            }
+        }
+        stage('Login and Push to DockerHub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-koddy', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                        sh 'echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin'
+                    }
+                    sh "docker push ${params.DOCKERHUB_USERNAME}/${params.APP_NAME}:${params.APP_VERSION}"
                 }
             }
         }
