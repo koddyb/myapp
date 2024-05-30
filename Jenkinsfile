@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     parameters {
         string(name: 'GIT_CREDENTIALS', defaultValue: 'your-credentials-id', description: 'Enter your Git Credentials ID')
         string(name: 'GIT_URL', defaultValue: 'https://github.com/koddyb/myapp.git', description: 'Enter the Git Repository URL')
@@ -18,6 +18,18 @@ pipeline {
                 git branch: "${params.GIT_BRANCH}", 
                     credentialsId: "${params.GIT_CREDENTIALS}", 
                     url: "${params.GIT_URL}"
+            }
+        }
+        stage('SonarQube Analysis') {
+            environment {
+                SONAR_SCANNER_HOME = tool 'sonar'
+            }
+            steps {
+                withSonarQubeEnv('sonar') {
+                    script {
+                        sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner"
+                    }
+                }
             }
         }
     }
