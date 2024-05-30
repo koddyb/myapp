@@ -38,7 +38,7 @@ pipeline {
         stage('Building Application') {
             steps {
                 script {
-                    sh "docker build -t ${params.DOCKERHUB_USERNAME}/${params.APP_NAME}:${params.APP_VERSION} ."
+                    sh "docker build -t ${params.DOCKERHUB_USERNAME}/${params.APP_NAME}:${params.APP_VERSION}."
                 }
             }
         }
